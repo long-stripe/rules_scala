@@ -1,3 +1,5 @@
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
+
 package(default_visibility = ["//visibility:public"])
 
 java_import(
@@ -15,4 +17,11 @@ java_import(
         "//external:io_bazel_rules_scala/dependency/scala/scala_reflect",
         "//external:io_bazel_rules_scala/dependency/scala/scala_xml",
     ],
+)
+
+bzl_library(
+    name = "specs2-rules",
+    srcs = glob(["*.bzl"]),
+    deps = ["//junit:junit-rules"],
+    visibility = ["//visibility:public"],
 )

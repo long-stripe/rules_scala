@@ -1,4 +1,5 @@
 load("//scala_proto:scala_proto_toolchain.bzl", "scala_proto_toolchain")
+load("@io_bazel_skydoc//stardoc:stardoc.bzl", "stardoc")
 
 toolchain_type(
     name = "toolchain_type",
@@ -35,4 +36,14 @@ toolchain(
     toolchain = ":enable_all_options_toolchain_impl",
     toolchain_type = "@io_bazel_rules_scala//scala_proto:toolchain_type",
     visibility = ["//visibility:public"],
+)
+
+stardoc(
+    name = "scala-proto-docs",
+    deps = [
+        "//scala:scala-rules",
+        "//scala_proto/private:scala-proto-private-rules",
+    ],
+    input = "scala_proto.bzl",
+    out = "scala-proto-docs.md",
 )

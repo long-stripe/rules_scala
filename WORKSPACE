@@ -3,7 +3,7 @@ workspace(name = "io_bazel_rules_scala")
 
 load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
 load("@bazel_tools//tools/build_defs/repo:git.bzl", "git_repository")
-load("//scala:scala.bzl", "scala_repositories")
+load("//scala:scala_repositories.bzl", "scala_repositories")
 
 scala_repositories()
 

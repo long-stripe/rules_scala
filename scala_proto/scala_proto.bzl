@@ -70,8 +70,17 @@ def _scalapb_proto_library_impl(ctx):
 
 scalapb_proto_library = rule(
     implementation = _scalapb_proto_library_impl,
+    doc = """
+Protlibrary doc
+
+Example:
+  example stuff
+""",
     attrs = {
-        "deps": attr.label_list(aspects = [scalapb_aspect])
+        "deps": attr.label_list(
+            aspects = [scalapb_aspect],
+            doc = "Deps used to build this target",
+        )
     },
     provides = [DefaultInfo, ScalaPBInfo, JavaInfo],
 )

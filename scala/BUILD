@@ -3,6 +3,7 @@ load(
     _declare_scalac_provider = "declare_scalac_provider",
 )
 load("//scala:scala_toolchain.bzl", "scala_toolchain")
+load("@bazel_skylib//:bzl_library.bzl", "bzl_library")
 
 toolchain_type(
     name = "toolchain_type",
@@ -55,6 +56,26 @@ _declare_scalac_provider(
         "@io_bazel_rules_scala_scala_library",
         "@io_bazel_rules_scala_scala_reflect",
         "@io_bazel_rules_scala_scala_compiler",
+    ],
+    visibility = ["//visibility:public"],
+)
+
+bzl_library(
+    name = "scala-rules",
+    srcs = [
+        "scala.bzl",
+        "providers.bzl",
+        "jars_to_labels.bzl",
+        "plusone.bzl",
+        "scala_cross_version.bzl",
+        "scala_import.bzl",
+        "scala_maven_import_external.bzl",
+        "scala_toolchain.bzl",
+        "toolchains.bzl",
+    ],
+    deps = [
+        "//scala/private:scala-rules-private",
+        "//specs2:specs2-rules",
     ],
     visibility = ["//visibility:public"],
 )
