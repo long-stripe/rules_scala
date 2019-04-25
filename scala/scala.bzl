@@ -487,7 +487,7 @@ def scala_repositories(
         licenses = ["notice"],
         server_urls = maven_servers,
     )
-    
+
     # Using this and not the bazel regular one due to issue when classpath is too long
     # until https://github.com/bazelbuild/bazel/issues/6955 is resolved
     if native.existing_rule("java_stub_template") == None:
