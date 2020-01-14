@@ -55,15 +55,15 @@ def run_sculpt(actions, outjson_file, sculpt, scalac, scalacopts, plugins, resou
 def sculpt_json_impl(ctx):
     outjson = ctx.actions.declare_file(ctx.label.name + "_sculpt.json")
     run_sculpt(
-        ctx.actions,
-        outjson,
-        ctx.files._sculpt_plugin,
-        ctx.executable._scalac_runner,
-        ctx.attr.scalacopts,
-        ctx.attr.plugins,
-        ctx.files.resources,
-        ctx.attr.deps,
-        ctx.files.srcs,
+        actions = ctx.actions,
+        outjson_file = outjson,
+        sculpt = ctx.files._sculpt_plugin,
+        scalac = ctx.executable._scalac_runner,
+        scalacopts = ctx.attr.scalacopts if hasattr(ctx.attr, "scalacopts") else [],
+        plugins = ctx.attr.plugins if hasattr(ctx.attr, "plugins") else [],
+        resources = ctx.rule.files.resources if hasattr(ctx.rule.files, "resources") else [],
+        deps = ctx.attr.deps,
+        src_files = ctx.files.srcs,
     )
     return [DefaultInfo(files = depset([outjson]))]
 
@@ -97,15 +97,15 @@ def sculpt_json_for(target, ctx):
     outname = target.label.name + "_sculpt.json"
     outjson = ctx.actions.declare_file(outname)
     run_sculpt(
-        ctx.actions,
-        outjson,
-        ctx.files._sculpt_plugin,
-        ctx.executable._scalac_runner,
-        ctx.rule.attr.scalacopts,
-        ctx.rule.attr.plugins,
-        ctx.rule.files.resources,
-        ctx.rule.attr.deps,
-        ctx.rule.files.srcs,
+        actions = ctx.actions,
+        outjson_file = outjson,
+        sculpt = ctx.files._sculpt_plugin,
+        scalac = ctx.executable._scalac_runner,
+        scalacopts = ctx.attr.scalacopts if hasattr(ctx.attr, "scalacopts") else [],
+        plugins = ctx.attr.plugins if hasattr(ctx.attr, "plugins") else [],
+        resources = ctx.rule.files.resources if hasattr(ctx.rule.files, "resources") else [],
+        deps = ctx.rule.attr.deps,
+        src_files = ctx.rule.files.srcs,
     )
 
     return outjson
