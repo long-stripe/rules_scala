@@ -28,7 +28,7 @@ scala_library(
     )
 
 def run_sculpt(actions, outjson_file, sculpt, scalac, scalacopts, plugins, resources, deps, src_files):
-    dep_files = collect_jars(deps).transitive_compile_jars.to_list()
+    dep_files = collect_jars([dep for dep in deps if JavaInfo in dep]).transitive_compile_jars.to_list()
     plugin_jars = collect_plugin_paths(plugins).to_list()
 
     args = actions.args()
@@ -104,8 +104,8 @@ def sculpt_json_for(target, ctx):
         scalacopts = ctx.attr.scalacopts if hasattr(ctx.attr, "scalacopts") else [],
         plugins = ctx.attr.plugins if hasattr(ctx.attr, "plugins") else [],
         resources = ctx.rule.files.resources if hasattr(ctx.rule.files, "resources") else [],
-        deps = ctx.rule.attr.deps,
-        src_files = ctx.rule.files.srcs,
+        deps = ctx.rule.attr.deps if hasattr(ctx.rule.files, "deps") else [],
+        src_files = ctx.rule.files.srcs if hasattr(ctx.rule.files, "srcs") else [],
     )
 
     return outjson
@@ -135,14 +135,17 @@ def run_processor(actions, sculpt_proc, target_short_name, json_file, pack_root_
 def split_build_for(target, ctx, json_file):
     outname = target.label.name + "_split.BUILD"
     outbuild = ctx.actions.declare_file(outname)
+    deps = ctx.rule.attr.deps if hasattr(ctx.rule.attr, "deps") else []
+    exports = ctx.rule.attr.exports if hasattr(ctx.rule.attr, "exports") else []
+
     run_processor(
         ctx.actions,
         ctx.executable._sculpt_processor,
         target.label.name,
         json_file,
         target.label.package,
-        [str(d.label) for d in ctx.rule.attr.deps],
-        [str(e.label) for e in ctx.rule.attr.exports],
+        [str(d.label) for d in deps],
+        [str(e.label) for e in exports],
         outbuild,
     )
 
